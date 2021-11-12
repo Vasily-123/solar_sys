@@ -41,7 +41,8 @@ def execution(delta):
     model_time += delta
 
 def write_to_written():
-    pass
+    write_space_objects_data_to_file("written.txt", space_objects)
+
 
 def start_execution():
     """Обработчик события нажатия на кнопку Start.
@@ -64,7 +65,7 @@ def stop_execution():
     alive = False
 
 
-def open_file():
+def open_file_0():
     """Открывает диалоговое окно выбора имени файла и вызывает
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
@@ -75,6 +76,21 @@ def open_file():
 
     model_time = 0.0
     in_filename = "solar_system.txt"
+    space_objects = read_space_objects_data_from_file(in_filename)
+    max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
+    calculate_scale_factor(max_distance)
+
+def open_file_1():
+    """Открывает диалоговое окно выбора имени файла и вызывает
+    функцию считывания параметров системы небесных тел из данного файла.
+    Считанные объекты сохраняются в глобальный список space_objects
+    """
+    global space_objects
+    global browser
+    global model_time
+
+    model_time = 0.0
+    in_filename = "written.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
@@ -99,22 +115,25 @@ def slider_reaction(event):
 
 def init_ui(screen):
     global browser
-    slider = thorpy.SliderX(100, (-20, 20), "Simulation speed")
+    slider = thorpy.SliderX(100, (-12, 12), "Simulation speed")
     slider.user_func = slider_reaction
     button_stop = thorpy.make_button("Quit", func=stop_execution)
     button_pause = thorpy.make_button("Pause", func=pause_execution)
     button_play = thorpy.make_button("Play", func=start_execution)
     timer = thorpy.OneLineText("Seconds passed")
 
-    button_write = thorpy.make_button("Safe data",  write_space_objects_data_to_file("written.txt", space_objects))
-    button_load = thorpy.make_button(text="Load a file", func=open_file)
+    button_write = thorpy.make_button("Safe data", func=write_to_written)
+    button_load1 = thorpy.make_button(text="Load start", func=open_file_0)
+    button_load2 = thorpy.make_button(text="Load last", func=open_file_1)
+
 
     box = thorpy.Box(elements=[
         slider,
         button_pause, 
         button_stop, 
-        button_play, 
-        button_load,
+        button_play,
+        button_load1,
+        button_load2,
         button_write,
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
@@ -158,22 +177,19 @@ def main():
     last_time = time.perf_counter()
     drawer = Drawer(screen)
     menu, box, timer = init_ui(screen)
-    perform_execution = True
 
     while alive:
-        write_space_objects_data_to_file("written.txt", space_objects)
         handle_events(pg.event.get(), menu)
         cur_time = time.perf_counter()
         if perform_execution:
             execution((cur_time - last_time) * time_scale)
             text = "%d seconds passed" % (int(model_time))
             timer.set_text(text)
-            write_space_objects_data_to_file("written.txt", space_objects)
+            #write_space_objects_data_to_file("written.txt", space_objects)
 
         last_time = cur_time
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
-    print(space_objects)
     print('Modelling finished!')
 
 
