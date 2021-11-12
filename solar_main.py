@@ -45,7 +45,7 @@ def write_to_written():
 
 
 def start_execution():
-    """Обработчик события нажатия на кнопку Start.
+    """Обработчик события нажатия на кнопку Play.
     Запускает циклическое исполнение функции execution.
     """
     global perform_execution
@@ -58,7 +58,7 @@ def pause_execution():
 
 
 def stop_execution():
-    """Обработчик события нажатия на кнопку Start.
+    """Обработчик события нажатия на кнопку Pause.
     Останавливает циклическое исполнение функции execution.
     """
     global alive
@@ -138,25 +138,26 @@ def init_ui(screen):
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
                                 reac_func=slider_reaction,
-                                event_args={"id":thorpy.constants.EVENT_SLIDE},
+                                event_args={"id": thorpy.constants.EVENT_SLIDE},
                                 params={},
                                 reac_name="slider reaction")
     box.add_reaction(reaction1)
-    
+
     menu = thorpy.Menu(box)
     for element in menu.get_population():
         element.surface = screen
 
-    box.set_topleft((100,100))
+    box.set_topleft((100, 100))
     box.blit()
     box.update()
     return menu, box, timer
+
 
 def main():
     """Главная функция главного модуля.
     Создаёт объекты графического дизайна библиотеки tkinter: окно, холст, фрейм с кнопками, кнопки.
     """
-    
+
     global physical_time
     global displayed_time
     global time_step
@@ -170,7 +171,7 @@ def main():
     physical_time = 0
 
     pg.init()
-    
+
     width = 1000
     height = 900
     screen = pg.display.set_mode((width, height))
