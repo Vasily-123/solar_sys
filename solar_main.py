@@ -26,6 +26,7 @@ time_scale = 100.0
 space_objects = []
 """Список космических объектов."""
 
+in_filename = ''
 
 def execution(delta):
     """Функция исполнения -- выполняется циклически, вызывая обработку всех небесных тел,
@@ -40,6 +41,18 @@ def execution(delta):
 
 def write_to_written():
     write_space_objects_data_to_file("written.txt", space_objects)
+
+def write_to_stats():
+    global in_filename
+    global model_time
+    if in_filename == "one_satellite.txt":
+        for obj in space_objects:
+            if obj.type == 'planet':
+                output = open("stats.txt", 'a')
+                r = (obj.x**2 + obj.y**2)**(0.5)
+                v = (obj.Vx**2 + obj.Vy**2)**(0.5)
+                print( ','.join([str(r), str(v), str(round(model_time))]), file = output )
+                output.close()
 
 
 def start_execution():
@@ -71,6 +84,7 @@ def open_file_0():
     global space_objects
     global browser
     global model_time
+    global in_filename
 
     model_time = 0.0
     in_filename = "solar_system.txt"
@@ -86,6 +100,7 @@ def open_file_1():
     global space_objects
     global browser
     global model_time
+    global in_filename
 
     model_time = 0.0
     in_filename = "written.txt"
@@ -102,6 +117,7 @@ def open_file_2():
     global space_objects
     global browser
     global model_time
+    global in_filename
 
     model_time = 0.0
     in_filename = "double_star.txt"
@@ -109,7 +125,21 @@ def open_file_2():
     max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
 
+def open_file_3():
+    """Открывает диалоговое окно выбора имени файла и вызывает
+    функцию считывания параметров системы небесных тел из данного файла.
+    Считанные объекты сохраняются в глобальный список space_objects
+    """
+    global space_objects
+    global browser
+    global model_time
+    global in_filename
 
+    model_time = 0.0
+    in_filename = "one_satellite.txt"
+    space_objects = read_space_objects_data_from_file(in_filename)
+    max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
+    calculate_scale_factor(max_distance)
 
 def handle_events(events, menu):
     global alive
@@ -138,9 +168,10 @@ def init_ui(screen):
     timer = thorpy.OneLineText("Seconds passed")
 
     button_write = thorpy.make_button("Safe data", func=write_to_written)
-    button_load1 = thorpy.make_button(text="Load start", func=open_file_0)
+    button_load1 = thorpy.make_button(text="Load start", func=open_file_0)  # params = {0}, 1, 2 ...
     button_load2 = thorpy.make_button(text="Load last", func=open_file_1)
     button_load3 = thorpy.make_button(text="Double star", func=open_file_2)
+    button_load4 = thorpy.make_button(text="Satelitte", func=open_file_3)
 
 
     box = thorpy.Box(elements=[
@@ -151,6 +182,7 @@ def init_ui(screen):
         button_load1,
         button_load2,
         button_load3,
+        button_load4,
         button_write,
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
@@ -203,7 +235,7 @@ def main():
             execution((cur_time - last_time) * time_scale)
             text = "%d seconds passed" % (int(model_time))
             timer.set_text(text)
-            #write_space_objects_data_to_file("written.txt", space_objects)
+            write_to_stats()
 
         last_time = cur_time
         drawer.update(space_objects, box)
