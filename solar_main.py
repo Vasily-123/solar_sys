@@ -1,11 +1,9 @@
 # coding: utf-8
 # license: GPLv3
 
-import pygame as pg
 from solar_vis import *
 from solar_model import *
 from solar_input import *
-from solar_objects import *
 import thorpy
 import time
 import numpy as np
@@ -96,6 +94,23 @@ def open_file_1():
     calculate_scale_factor(max_distance)
 
 
+def open_file_2():
+    """Открывает диалоговое окно выбора имени файла и вызывает
+    функцию считывания параметров системы небесных тел из данного файла.
+    Считанные объекты сохраняются в глобальный список space_objects
+    """
+    global space_objects
+    global browser
+    global model_time
+
+    model_time = 0.0
+    in_filename = "double_star.txt"
+    space_objects = read_space_objects_data_from_file(in_filename)
+    max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
+    calculate_scale_factor(max_distance)
+
+
+
 def handle_events(events, menu):
     global alive
     for event in events:
@@ -125,6 +140,7 @@ def init_ui(screen):
     button_write = thorpy.make_button("Safe data", func=write_to_written)
     button_load1 = thorpy.make_button(text="Load start", func=open_file_0)
     button_load2 = thorpy.make_button(text="Load last", func=open_file_1)
+    button_load3 = thorpy.make_button(text="Double star", func=open_file_2)
 
 
     box = thorpy.Box(elements=[
@@ -134,6 +150,7 @@ def init_ui(screen):
         button_play,
         button_load1,
         button_load2,
+        button_load3,
         button_write,
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
