@@ -3,15 +3,17 @@ import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 fig = plt.figure(figsize=(8, 8))
-vt = fig.add_subplot(2, 2, 3)  # будет рисовать два на два графика, этот под номером 1
-rt = fig.add_subplot(2, 2, 1)  # будет рисовать два на два графика, этот под номером 1
-vr = fig.add_subplot(2, 2, 2)
+vt = fig.add_subplot(2, 2, 1)  # будет рисовать два на два графика, этот под номером 1
+rt = fig.add_subplot(2, 2, 2)  # будет рисовать два на два графика, этот под номером 1
+vr = fig.add_subplot(2, 2, 3)
 r = []
 v = []
 t = []
 
 f = open('stats.txt', 'r')
 for line in f:
+     if len(line.strip()) == 0:
+          continue
      r.append(int(line.split(' ')[0]))  # по умолчанию разделение в каждой строке идёт по ' '
      v.append(int(line.split(' ')[1]))
      t.append(int(line.split(' ')[2]))
@@ -43,7 +45,7 @@ x1 =np.linspace(0, 5, 20)  # Массив, в котором авномерно 
 
 plt.grid(True)
 vt.plot(t, v, 'o')
-rt.plot(r, t, '^', 'b', label ='Смоделированная зависимость R(t)')
+rt.plot(t, r, '^', 'b', label ='Смоделированная зависимость R(t)')
 vr.plot(r, v, '^', 'b', label ='Смоделированная зависимость V(R)')
 
 

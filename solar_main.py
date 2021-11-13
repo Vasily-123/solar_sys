@@ -43,15 +43,21 @@ def write_to_written():
     write_space_objects_data_to_file("written.txt", space_objects)
 
 def write_to_stats():
+    global model_time
+    output = open("stats.txt", 'w')
+    output.close()
+
+def append_to_stats():
     global in_filename
     global model_time
     if in_filename == "one_satellite.txt":
         for obj in space_objects:
             if obj.type == 'planet':
                 output = open("stats.txt", 'a')
-                r = (obj.x**2 + obj.y**2)**(0.5)
-                v = (obj.Vx**2 + obj.Vy**2)**(0.5)
-                print( ','.join([str(r), str(v), str(round(model_time))]), file = output )
+                r = (obj.x ** 2 + obj.y ** 2) ** (0.5)
+                v = obj.v
+                t = model_time
+                print(' '.join(["{:.0f}".format(item) for item in [r, v, t]]), file=output)
                 output.close()
 
 
@@ -176,8 +182,8 @@ def init_ui(screen):
 
     box = thorpy.Box(elements=[
         slider,
-        button_pause, 
-        button_stop, 
+        button_pause,
+        button_stop,
         button_play,
         button_load1,
         button_load2,
@@ -227,6 +233,7 @@ def main():
     last_time = time.perf_counter()
     drawer = Drawer(screen)
     menu, box, timer = init_ui(screen)
+    write_to_stats()
 
     while alive:
         handle_events(pg.event.get(), menu)
@@ -235,7 +242,7 @@ def main():
             execution((cur_time - last_time) * time_scale)
             text = "%d seconds passed" % (int(model_time))
             timer.set_text(text)
-            write_to_stats()
+            append_to_stats()
 
         last_time = cur_time
         drawer.update(space_objects, box)

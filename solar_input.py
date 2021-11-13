@@ -40,9 +40,9 @@ def parse_star_parameters(line, star):
 
     Входная строка должна иметь слеюущий формат:
 
-    Star <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
+    Star <радиус в пикселах> <цвет> <масса> <r> <v> <Vx> <Vy>
 
-    Здесь (x, y) — координаты зведы, (Vx, Vy) — скорость.
+    Здесь (r, v) — координаты зведы, (Vx, Vy) — скорость.
 
     Пример строки:
 
@@ -68,9 +68,9 @@ def parse_planet_parameters(line, planet):
     """Считывает данные о планете из строки.
     Входная строка должна иметь слеюущий формат:
 
-    Planet <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
+    Planet <радиус в пикселах> <цвет> <масса> <r> <v> <Vx> <Vy>
 
-    Здесь (x, y) — координаты планеты, (Vx, Vy) — скорость.
+    Здесь (r, v) — координаты планеты, (Vx, Vy) — скорость.
 
     Пример строки:
 
@@ -97,9 +97,9 @@ def write_space_objects_data_to_file(output_filename, space_objects):
 
     Строки должны иметь следующий формат:
 
-    Star <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
+    Star <радиус в пикселах> <цвет> <масса> <r> <v> <Vx> <Vy>
 
-    Planet <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
+    Planet <радиус в пикселах> <цвет> <масса> <r> <v> <Vx> <Vy>
 
     Параметры:
 
@@ -108,14 +108,10 @@ def write_space_objects_data_to_file(output_filename, space_objects):
     **space_objects** — список объектов планет и звёзд
     """
     output = open(output_filename, 'w')
-    '''for obj in space_objects:
-        print(out_file, "%s %d %s %f" % ('1', 2, '3', 4.5))
-        # FIXME!'''
     print('#Данные о космических объектах', file=output)
     for obj in space_objects:
-        print(str(obj.R))
         print(''.join(str(obj.type)), ''.join(str(obj.R)),''.join(str(obj.color)),''.join(str(obj.m)),
-              ''.join(str(obj.x)),''.join(str(obj.y)),''.join(str(obj.Vx)),''.join(str(obj.Vy)), file=output)
+              ''.join(str(obj.x)), ''.join(str(obj.y)), ''.join(str(obj.Vx)), ''.join(str(obj.Vy)), file=output)
     output.close()
 
 
