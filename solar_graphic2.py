@@ -27,6 +27,7 @@ ax.set_xticks(major_ticks)
 ax.set_xticks(minor_ticks, minor=True)
 ax.set_yticks(major1_ticks)
 ax.set_yticks(minor1_ticks, minor=True)'''
+
 def draw_ticks(name):
      name.xaxis.set_minor_locator(AutoMinorLocator())
 
@@ -45,23 +46,24 @@ x1 =np.linspace(0, 5, 20)  # Массив, в котором авномерно 
 
 plt.grid(True)
 vt.plot(t, v, 'o')
-rt.plot(t, r, '^', 'b', label ='Смоделированная зависимость R(t)')
-vr.plot(r, v, '^', 'b', label ='Смоделированная зависимость V(R)')
+rt.plot(t, r, 's')
+vr.plot(r, v, '^', label ='Смоделированная зависимость V(R)')
 
 
-plt.xlabel(r'$R, км$')
-plt.ylabel(r'$V, км/с$')
+plt.xlabel(r'$R, м$')
+plt.ylabel(r'$V, м/с$')
 plt.legend(loc='best', fontsize=10)
 '''
-vt.xlabel(r'$R, км$')
-vt.ylabel(r'$V, км/с$')
+vt.label(r'$R, км$')
+vt.label(r'$V, км/с$')
 vt.legend(loc='best', fontsize=10)
-
 rt.xlabel(r'$t, c$')
 rt.ylabel(r'$R, км$')
 rt.legend(loc='best', fontsize=10)'''
 
-plt.show()
+
 plt.title('Графики для спутника Солнца')
+plt.show()
+
 
 
